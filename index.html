@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Bump &amp; Binge</title>
-<meta name="description" content="A cozy watchlist of movie recommendations for our mama-to-be's maternity leave. Add one!">
-<meta property="og:title" content="Bump &amp; Binge">
-<meta property="og:description" content="Leave a movie rec for our mama-to-be's maternity leave.">
+<title>Bump to Binge</title>
+<meta name="description" content="A cozy watchlist of movie and TV recommendations for our mama-to-be's maternity leave. Add one!">
+<meta property="og:title" content="Bump to Binge">
+<meta property="og:description" content="Leave a movie or TV show rec for our mama-to-be's maternity leave.">
 <meta name="theme-color" content="#6b3fa0">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='9' width='26' height='19' rx='5' fill='%23ece2fa' stroke='%236b3fa0' stroke-width='2'/%3E%3Cpath d='M13 14l7 4.5-7 4.5z' fill='%23e86fae'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +17,7 @@
 :root{
   --bg:#f6f1fc; --surface:#ffffff; --ink:#2c1f40; --muted:#6f5f92;
   --plum:#6b3fa0; --lilac:#c9b3ec; --lilac-soft:#ece2fa; --line:#ded0f3;
-  --pop:#d6559a; --ok:#2f8f6b;
+  --pop:#d6559a; --pop-soft:#fbe3f0; --ok:#2f8f6b;
   --display:"Fredoka","Nunito",ui-rounded,system-ui,sans-serif;
   --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
   color-scheme:light;
@@ -25,7 +25,7 @@
 @media (prefers-color-scheme: dark){:root{
   --bg:#1a1325; --surface:#251b35; --ink:#f1e9fc; --muted:#b4a3d3;
   --plum:#c7a6f5; --lilac:#5b4386; --lilac-soft:#33264a; --line:#3d2e57;
-  --pop:#f39acb; --ok:#6fd3a9; color-scheme:dark}}
+  --pop:#f39acb; --pop-soft:#45223a; --ok:#6fd3a9; color-scheme:dark}}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
@@ -37,22 +37,39 @@ h1,h2{font-family:var(--display);text-wrap:balance;margin:0}
 .hero{text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
 .hero svg{width:96px;height:96px}
 .hero h1{font-size:clamp(2.2rem,8vw,3.2rem);color:var(--plum);line-height:1.05;font-weight:700}
+.hero h1 .to{color:var(--pop);font-weight:600}
 .hero p{margin:0;color:var(--muted);max-width:44ch}
 .eyebrow{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--pop)}
 
 .card{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:22px}
 .card h2{font-size:1.35rem;margin-bottom:14px}
-form{display:grid;gap:14px}
+form{display:grid;gap:16px;min-width:0}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media (max-width:520px){.row{grid-template-columns:1fr}}
-label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.9rem;min-width:0}
-label small{font-weight:400;color:var(--muted)}
-input,textarea{font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:10px 12px;width:100%}
+label,.field{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.9rem;min-width:0}
+label small,.field small{font-weight:400;color:var(--muted)}
+input,textarea,select{font:inherit;font-weight:400;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;min-width:0}
+select{appearance:none;-webkit-appearance:none;padding-right:38px;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,var(--plum) 50%),linear-gradient(135deg,var(--plum) 50%,transparent 50%);
+  background-position:calc(100% - 20px) 55%,calc(100% - 14px) 55%;background-size:6px 6px;background-repeat:no-repeat}
+select:disabled{opacity:.5;cursor:default}
 textarea{resize:vertical;min-height:70px}
-input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--plum);outline-offset:2px}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible,.seg input:focus-visible+span{outline:3px solid var(--plum);outline-offset:2px}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 fieldset{border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;min-width:0}
 legend{font-weight:700;font-size:.9rem;padding:0;margin-bottom:6px}
+
+/* Movie / TV switch */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--lilac-soft);border-radius:14px;padding:4px}
+.seg label{display:block;position:relative;font-weight:600;font-size:.95rem;cursor:pointer}
+.seg input{position:absolute;inset:0;width:1px;height:1px;margin:0;padding:0;opacity:0;pointer-events:none}
+.seg span{display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 10px;border-radius:10px;color:var(--muted)}
+.seg svg{width:18px;height:18px;flex:none}
+.seg input:checked+span{background:var(--surface);color:var(--plum);box-shadow:0 1px 3px rgba(60,30,100,.15)}
+
+.subwrap{transition:opacity .2s}
+.subwrap[hidden]{display:none!important}
+
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{font:inherit;font-size:.88rem;font-weight:600;border:2px solid var(--line);background:var(--surface);color:var(--ink);
   border-radius:999px;padding:6px 12px;cursor:pointer}
@@ -69,20 +86,26 @@ legend{font-weight:700;font-size:.9rem;padding:0;margin-bottom:6px}
 .listhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
 .listhead h2{font-size:1.5rem}
 .count{color:var(--muted);font-variant-numeric:tabular-nums;font-weight:600}
-.filters{margin-top:12px}
+.filters{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.filterrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.filterrow select{padding-block:7px;font-size:.9rem}
+.check{flex-direction:row;align-items:center;gap:8px;font-weight:600;font-size:.9rem;cursor:pointer}
+.check input{width:18px;height:18px;accent-color:var(--plum)}
 .list{display:flex;flex-direction:column;gap:14px;margin-top:16px}
 
-.stub{display:grid;grid-template-columns:auto 1fr;background:var(--surface);border:2px solid var(--line);border-radius:18px;overflow:hidden}
-.stub .side{background:var(--lilac-soft);border-right:2px dashed var(--lilac);padding:14px 12px;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:2px;min-width:74px;text-align:center}
-.side .admit{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.stub{display:grid;grid-template-columns:auto minmax(0,1fr);background:var(--surface);border:2px solid var(--line);border-radius:18px;overflow:hidden}
+.stub .side{background:var(--lilac-soft);border-right:2px dashed var(--lilac);padding:14px 10px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2px;width:84px;text-align:center}
+.stub.tv .side{background:var(--pop-soft);border-right-color:var(--pop)}
+.side .admit{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);line-height:1.3}
 .side .num{font-family:var(--display);font-size:1.5rem;font-weight:700;color:var(--plum);font-variant-numeric:tabular-nums}
+.stub.tv .side .num{color:var(--pop)}
 .stub .main{padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
 .stub h3{margin:0;font-family:var(--display);font-size:1.2rem;font-weight:600;overflow-wrap:anywhere}
-.stub h3 .yr{color:var(--muted);font-weight:500;font-size:1rem}
 .why{margin:0;overflow-wrap:anywhere}
-.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.85rem;color:var(--muted)}
-.tag{background:var(--lilac-soft);color:var(--plum);border-radius:999px;padding:2px 10px;font-weight:700;font-size:.78rem}
+.meta{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:.85rem;color:var(--muted)}
+.tag{background:var(--lilac-soft);color:var(--plum);border-radius:999px;padding:2px 10px;font-weight:700;font-size:.78rem;max-width:100%;overflow-wrap:anywhere}
+.tag.genre{background:transparent;border:1.5px solid var(--lilac)}
 .tag.example{background:transparent;border:1.5px dashed var(--lilac);color:var(--muted)}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .mini{font:inherit;font-size:.82rem;font-weight:700;border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
@@ -110,26 +133,43 @@ legend{font-weight:700;font-size:.9rem;padding:0;margin-bottom:6px}
       <path d="M78 14c-3-4-9-1-6 4l6 6 6-6c3-5-3-8-6-4z" fill="var(--pop)"/>
     </svg>
     <span class="eyebrow">Maternity-leave watchlist</span>
-    <h1>Bump &amp; Binge</h1>
-    <p>Feet up, snacks within reach. Leave a movie you think our mama-to-be would love for those cozy couch days and late-night feeds.</p>
+    <h1>Bump <span class="to">to</span> Binge</h1>
+    <p>Leave a movie or show you think our mama-to-be would love for those cozy couch days and late-night feeds.</p>
   </header>
 
   <div class="notice" id="setupNotice" hidden>
-    <strong>Almost ready.</strong> This page isn't connected to its Google Sheet yet, so the movies below are examples.
+    <strong>Almost ready.</strong> This page isn't connected to its Google Sheet yet, so the picks below are examples.
     Paste the web app URL into <code>SCRIPT_URL</code> in <code>index.html</code> (see SETUP.md).
   </div>
 
   <section class="card" aria-labelledby="add-h">
     <h2 id="add-h">Drop a rec</h2>
     <form id="recForm" novalidate>
+      <fieldset>
+        <legend>Is it a…</legend>
+        <div class="seg" id="typeSeg">
+          <label><input type="radio" name="type" id="t-movie" value="movie" checked><span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 5v14M17 5v14M3 9.5h4M3 14.5h4M17 9.5h4M17 14.5h4"/></svg>
+            Movie</span></label>
+          <label><input type="radio" name="type" id="t-tv" value="tv"><span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 3l4 4 4-4"/></svg>
+            TV show</span></label>
+        </div>
+      </fieldset>
+
+      <label for="f-title"><span id="titleLabel">Movie title</span>
+        <input id="f-title" name="title" maxlength="120" required autocomplete="off" placeholder="Paddington 2">
+      </label>
+
       <div class="row">
-        <label for="f-title">Movie title
-          <input id="f-title" name="title" maxlength="120" required autocomplete="off" placeholder="Paddington 2">
+        <label for="f-genre">Genre
+          <select id="f-genre" name="genre"></select>
         </label>
-        <label for="f-year">Year <small>(optional)</small>
-          <input id="f-year" name="year" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="2017">
+        <label for="f-sub" class="subwrap" id="subWrap" hidden>Sub-genre <small>(optional)</small>
+          <select id="f-sub" name="subgenre"></select>
         </label>
       </div>
+
       <fieldset>
         <legend>Vibe</legend>
         <div class="chips" id="vibeChips"></div>
@@ -153,7 +193,14 @@ legend{font-weight:700;font-size:.9rem;padding:0;margin-bottom:6px}
       <h2 id="list-h">The watchlist</h2>
       <span class="count" id="count"></span>
     </div>
-    <div class="chips filters" id="filterChips" role="group" aria-label="Filter the list"></div>
+    <div class="filters">
+      <div class="chips" id="typeChips" role="group" aria-label="Show movies, TV shows, or both"></div>
+      <div class="filterrow">
+        <select id="genreFilter" aria-label="Filter by genre"></select>
+        <select id="vibeFilter" aria-label="Filter by vibe"></select>
+      </div>
+      <label class="check" for="hideWatched"><input type="checkbox" id="hideWatched"> Hide ones she's watched</label>
+    </div>
     <div class="list" id="list" aria-live="polite">
       <div class="empty"><strong>Loading the lineup…</strong>Recommendations show up here as soon as people add them.</div>
     </div>
@@ -167,27 +214,49 @@ legend{font-weight:700;font-size:.9rem;padding:0;margin-bottom:6px}
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxx_n_d_BIxhdWC-KUiyS4w1U8q9CsvRtULN2O1buovVU4hJcxuILD6T7wbR2H6oju2/exec";
 // ▲▲▲
 
+// Genres and their optional sub-genres. Edit freely: the page builds both dropdowns from this list.
+const GENRES = {
+  "Comedy":                ["Rom-com", "Sitcom", "Dark comedy", "Mockumentary", "Parody", "Stand-up"],
+  "Drama":                 ["Family", "Period piece", "Coming-of-age", "Medical", "Legal", "Sports", "Workplace"],
+  "Romance":               ["Rom-com", "Period romance", "Holiday", "Romantic drama"],
+  "Action & Adventure":    ["Superhero", "Heist", "Spy", "Martial arts", "Disaster", "Western"],
+  "Sci-fi & Fantasy":      ["Space", "Time travel", "Dystopian", "Fairy tale", "Magic & myth"],
+  "Mystery & Thriller":    ["Whodunit", "Cozy mystery", "Crime", "Psychological", "Political"],
+  "Horror":                ["Supernatural", "Horror-comedy", "Psychological", "Slasher"],
+  "Animation":             ["Family-friendly", "Anime", "Adult animation", "Stop-motion"],
+  "Documentary":           ["Nature", "True crime", "Food", "Music", "History", "Sports"],
+  "Reality & Competition": ["Baking & cooking", "Dating", "Home & makeover", "Competition", "Travel"],
+  "Musical":               ["Movie musical", "Concert film", "Music biopic"],
+  "Family & Kids":         ["Live action", "Animated", "Holiday"],
+  "Other":                 []
+};
 const VIBES = [
   {id:"cozy",    label:"Cozy & comforting"},
   {id:"laugh",   label:"Make me laugh"},
   {id:"cry",     label:"Happy cry"},
   {id:"romance", label:"Swoony"},
-  {id:"family",  label:"Animated"},
+  {id:"binge",   label:"Totally bingeable"},
   {id:"edge",    label:"Edge of my seat"},
   {id:"classic", label:"Classic"}
 ];
+const TYPE_COPY = {
+  movie: {label:"Movie title",  placeholder:"Paddington 2",  ticket:"Admit one"},
+  tv:    {label:"Show title",   placeholder:"Ted Lasso",     ticket:"Season pass"}
+};
 const EXAMPLES = [
-  {id:"ex1", title:"Paddington 2", year:"2017", vibe:"cozy", why:"The most wholesome movie ever made. Marmalade sandwiches recommended.", from:"Example", watched:false, example:true},
-  {id:"ex2", title:"The Princess Bride", year:"1987", vibe:"classic", why:"Funny, swoony, and quotable. As you wish.", from:"Example", watched:false, example:true}
+  {id:"ex1", type:"movie", title:"Paddington 2", genre:"Family & Kids", subgenre:"Live action", vibe:"cozy", why:"The most wholesome movie ever made. Marmalade sandwiches recommended.", from:"Example", watched:false, example:true},
+  {id:"ex2", type:"tv", title:"The Great British Bake Off", genre:"Reality & Competition", subgenre:"Baking & cooking", vibe:"binge", why:"Gentle, kind, and you can drift off mid-episode without missing a thing.", from:"Example", watched:false, example:true}
 ];
+
 const vibeLabel = id => (VIBES.find(v => v.id === id) || {}).label || "";
 const $ = id => document.getElementById(id);
 const configured = /^https:\/\/script\.google(usercontent)?\.com\//.test(SCRIPT_URL);
 
-let pickedVibe = "cozy", filter = "all", recs = [], loadedOnce = false;
+let pickedType = "movie", pickedVibe = "cozy", recs = [], loadedOnce = false;
+const filters = {type:"all", genre:"", vibe:"", hideWatched:false};
 
 function setStatus(msg, err){ const s = $("formStatus"); s.textContent = msg; s.classList.toggle("err", !!err); }
-
+function option(value, text){ const o = document.createElement("option"); o.value = value; o.textContent = text; return o; }
 function makeChip(label, pressed, onClick){
   const b = document.createElement("button");
   b.type = "button"; b.className = "chip"; b.textContent = label;
@@ -195,50 +264,106 @@ function makeChip(label, pressed, onClick){
   b.addEventListener("click", onClick);
   return b;
 }
+
+/* ---------- form ---------- */
+function applyType(){
+  const c = TYPE_COPY[pickedType];
+  $("titleLabel").textContent = c.label;
+  $("f-title").placeholder = c.placeholder;
+}
+document.querySelectorAll('#typeSeg input').forEach(r => r.addEventListener("change", () => { pickedType = r.value; applyType(); }));
+
+function buildGenreSelect(){
+  const g = $("f-genre"); g.textContent = "";
+  g.appendChild(option("", "Pick a genre…"));
+  Object.keys(GENRES).forEach(name => g.appendChild(option(name, name)));
+}
+function updateSubgenres(){
+  const subs = GENRES[$("f-genre").value] || [];
+  const s = $("f-sub"); s.textContent = "";
+  s.appendChild(option("", "Any / skip"));
+  subs.forEach(name => s.appendChild(option(name, name)));
+  $("subWrap").hidden = subs.length === 0;
+}
+$("f-genre").addEventListener("change", updateSubgenres);
+
 function renderVibeChips(){
   const box = $("vibeChips"); box.textContent = "";
   VIBES.forEach(v => box.appendChild(makeChip(v.label, v.id === pickedVibe, () => { pickedVibe = v.id; renderVibeChips(); })));
 }
-function renderFilters(){
-  const box = $("filterChips"); box.textContent = "";
-  [{id:"all",label:"All"},{id:"unwatched",label:"Still to watch"},...VIBES].forEach(v =>
-    box.appendChild(makeChip(v.label, v.id === filter, () => { filter = v.id; renderFilters(); renderList(); })));
-}
 
+/* ---------- filters ---------- */
+function renderTypeChips(){
+  const box = $("typeChips"); box.textContent = "";
+  [{id:"all",label:"Everything"},{id:"movie",label:"Movies"},{id:"tv",label:"TV shows"}].forEach(t =>
+    box.appendChild(makeChip(t.label, filters.type === t.id, () => { filters.type = t.id; renderTypeChips(); renderList(); })));
+}
+function buildFilterSelects(){
+  const g = $("genreFilter"); g.textContent = "";
+  g.appendChild(option("", "All genres"));
+  Object.keys(GENRES).forEach(name => g.appendChild(option(name, name)));
+  const v = $("vibeFilter"); v.textContent = "";
+  v.appendChild(option("", "All vibes"));
+  VIBES.forEach(x => v.appendChild(option(x.id, x.label)));
+}
+$("genreFilter").addEventListener("change", e => { filters.genre = e.target.value; renderList(); });
+$("vibeFilter").addEventListener("change", e => { filters.vibe = e.target.value; renderList(); });
+$("hideWatched").addEventListener("change", e => { filters.hideWatched = e.target.checked; renderList(); });
+
+/* ---------- list ---------- */
 function emptyState(title, text){
   const e = document.createElement("div"); e.className = "empty";
   const s = document.createElement("strong"); s.textContent = title;
   e.append(s, text); return e;
 }
+function plural(n, one, many){ return `${n} ${n === 1 ? one : many}`; }
 
 function renderList(){
   const list = $("list");
-  const shown = recs.filter(r => filter === "all" ? true : filter === "unwatched" ? !r.watched : r.vibe === filter);
+  const shown = recs.filter(r =>
+    (filters.type === "all" || (r.type || "movie") === filters.type) &&
+    (!filters.genre || r.genre === filters.genre) &&
+    (!filters.vibe || r.vibe === filters.vibe) &&
+    (!filters.hideWatched || !r.watched));
   const real = recs.filter(r => !r.example);
-  const watched = real.filter(r => r.watched).length;
-  $("count").textContent = real.length ? `${real.length} movie${real.length === 1 ? "" : "s"} · ${watched} watched` : "";
+  if (real.length){
+    const movies = real.filter(r => (r.type || "movie") === "movie").length;
+    const shows = real.length - movies;
+    const parts = [];
+    if (movies) parts.push(plural(movies, "movie", "movies"));
+    if (shows) parts.push(plural(shows, "show", "shows"));
+    parts.push(`${real.filter(r => r.watched).length} watched`);
+    $("count").textContent = parts.join(" · ");
+  } else $("count").textContent = "";
+
   list.textContent = "";
   if (!shown.length){
     list.appendChild(recs.length
-      ? emptyState("Nothing here yet", "Try another filter, or add a movie that fits.")
-      : emptyState("No recs yet", "Be the first! Add a movie above and it'll land right here."));
+      ? emptyState("Nothing here yet", "Try a different filter, or add one that fits.")
+      : emptyState("No recs yet", "Be the first! Add a movie or show above and it'll land right here."));
     return;
   }
   shown.forEach(r => {
+    const type = r.type === "tv" ? "tv" : "movie";
     const n = recs.indexOf(r) + 1;
-    const el = document.createElement("article"); el.className = "stub" + (r.watched ? " watched" : "");
+    const el = document.createElement("article");
+    el.className = "stub " + type + (r.watched ? " watched" : "");
+
     const side = document.createElement("div"); side.className = "side";
-    const a = document.createElement("span"); a.className = "admit"; a.textContent = "Admit one";
+    const a = document.createElement("span"); a.className = "admit"; a.textContent = TYPE_COPY[type].ticket;
     const num = document.createElement("span"); num.className = "num"; num.textContent = "#" + String(n).padStart(2, "0");
     side.append(a, num);
 
     const main = document.createElement("div"); main.className = "main";
     const h = document.createElement("h3"); h.textContent = r.title;
-    if (r.year){ const y = document.createElement("span"); y.className = "yr"; y.textContent = " (" + r.year + ")"; h.appendChild(y); }
     main.appendChild(h);
     if (r.why){ const p = document.createElement("p"); p.className = "why"; p.textContent = r.why; main.appendChild(p); }
 
     const meta = document.createElement("div"); meta.className = "meta";
+    if (r.genre){
+      const t = document.createElement("span"); t.className = "tag genre";
+      t.textContent = r.subgenre ? `${r.genre} · ${r.subgenre}` : r.genre; meta.appendChild(t);
+    }
     if (vibeLabel(r.vibe)){ const t = document.createElement("span"); t.className = "tag"; t.textContent = vibeLabel(r.vibe); meta.appendChild(t); }
     if (r.example){ const t = document.createElement("span"); t.className = "tag example"; t.textContent = "Example"; meta.appendChild(t); }
     else { const f = document.createElement("span"); f.textContent = "from " + (r.from || "a secret admirer"); meta.appendChild(f); }
@@ -257,6 +382,7 @@ function renderList(){
   });
 }
 
+/* ---------- data ---------- */
 async function api(body){
   // text/plain keeps this a "simple" request, which Apps Script accepts cross-origin
   const res = await fetch(SCRIPT_URL, {method:"POST", body: JSON.stringify(body)});
@@ -271,7 +397,9 @@ async function load(){
     const res = await fetch(SCRIPT_URL, {cache:"no-store"});
     const data = await res.json();
     if (!data.ok) throw new Error("failed");
+    const pending = recs.filter(r => r.pending);
     recs = (data.recs || []).sort((a, b) => (a.added || 0) - (b.added || 0));
+    pending.forEach(p => { if (!recs.some(r => r.title === p.title && r.from === p.from)) recs.push(p); });
     loadedOnce = true;
     renderList();
   }catch(e){
@@ -290,20 +418,23 @@ async function toggleWatched(r, btn){
     r.watched = next; renderList();
   }catch(e){
     btn.disabled = false;
-    setStatus("Couldn't update that movie. Please try again.", true);
+    setStatus("Couldn't update that one. Please try again.", true);
   }
 }
 
 $("recForm").addEventListener("submit", async ev => {
   ev.preventDefault();
   const title = $("f-title").value.trim();
-  if (!title){ setStatus("Add a movie title first.", true); $("f-title").focus(); return; }
+  const noun = pickedType === "tv" ? "show" : "movie";
+  if (!title){ setStatus(`Add a ${noun} title first.`, true); $("f-title").focus(); return; }
   if (!configured){ setStatus("This page isn't connected to its Google Sheet yet, so nothing was saved.", true); return; }
-  const yr = $("f-year").value.trim();
+  const genre = $("f-genre").value;
   const body = {
     action:"add",
+    type: pickedType,
     title: title.slice(0,120),
-    year: /^\d{4}$/.test(yr) ? yr : "",
+    genre,
+    subgenre: (GENRES[genre] || []).includes($("f-sub").value) ? $("f-sub").value : "",
     vibe: pickedVibe,
     why: $("f-why").value.trim().slice(0,400),
     from: $("f-from").value.trim().slice(0,60),
@@ -313,21 +444,24 @@ $("recForm").addEventListener("submit", async ev => {
   try{
     const out = await api(body);
     try{ localStorage.setItem("bb-from", body.from); }catch(_){}
-    recs.push({id: out.id || ("tmp" + Date.now()), title: body.title, year: body.year, vibe: body.vibe, why: body.why, from: body.from, watched:false, added: Date.now(), pending: !out.id});
+    recs.push({id: out.id || ("tmp" + Date.now()), type: body.type, title: body.title, genre: body.genre, subgenre: body.subgenre,
+               vibe: body.vibe, why: body.why, from: body.from, watched:false, added: Date.now(), pending: !out.id});
     renderList();
-    $("f-title").value = ""; $("f-year").value = ""; $("f-why").value = "";
+    $("f-title").value = ""; $("f-why").value = ""; $("f-genre").value = ""; updateSubgenres();
     setStatus(`Added “${body.title}”. Thank you! 💜`);
   }catch(e){
-    setStatus(e.message === "full" ? "The list is full! Ask the organizer to clear out some watched movies."
+    setStatus(e.message === "full" ? "The list is full! Ask the organizer to clear out some watched ones."
                                     : "Couldn't save that just now. Please try again in a moment.", true);
   }finally{
     $("submitBtn").disabled = false;
   }
 });
 
+/* ---------- start ---------- */
 try{ const f = localStorage.getItem("bb-from"); if (f) $("f-from").value = f; }catch(_){}
 $("setupNotice").hidden = configured;
-renderVibeChips(); renderFilters(); load();
+applyType(); buildGenreSelect(); updateSubgenres(); renderVibeChips();
+renderTypeChips(); buildFilterSelects(); load();
 // pick up other people's additions while the page is open
 setInterval(() => { if (configured && document.visibilityState === "visible") load(); }, 60000);
 document.addEventListener("visibilitychange", () => { if (configured && document.visibilityState === "visible") load(); });

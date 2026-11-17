@@ -1,6 +1,6 @@
-# Bump & Binge 🎬💜
+# Bump to Binge 🎬💜
 
-A cozy shared watchlist where coworkers leave movie recommendations for a mama-to-be's maternity leave.
+A cozy shared watchlist where coworkers leave movie and TV recommendations for a mama-to-be's maternity leave.
 
 **Live page:** https://bbmjps94ww-ux.github.io/bump-and-binge/
 

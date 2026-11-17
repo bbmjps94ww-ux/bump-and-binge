@@ -1,4 +1,4 @@
-# Bump & Binge: setup
+# Bump to Binge: setup
 
 A shared movie watchlist for a coworker's maternity leave. It's two pieces:
 
@@ -11,7 +11,7 @@ Nobody needs an account to add a movie. About 15 minutes, start to finish.
 
 ## 1. Make the Google Sheet and its script
 
-1. Go to [sheets.new](https://sheets.new) and name the sheet something like **Bump & Binge**.
+1. Go to [sheets.new](https://sheets.new) and name the sheet something like **Bump to Binge**.
 2. In the menu, open **Extensions → Apps Script**.
 3. Delete what's in the editor, paste in all of `Code.gs`, and click **Save** (the disk icon).
 4. Click **Deploy → New deployment**.

@@ -12,15 +12,15 @@
  * the page picks the change up on its next refresh.
  */
 
-const SHEET_NAME = 'Recs';
-const HEADERS = ['id', 'added', 'type', 'title', 'genre', 'subgenre', 'vibe', 'why', 'from', 'watched'];
-const TYPES = ['movie', 'tv'];
-const VIBES = ['cozy', 'laugh', 'cry', 'romance', 'binge', 'edge', 'classic'];
-const MAX_ROWS = 2000;
+var SHEET_NAME = 'Recs';
+var HEADERS = ['id', 'added', 'type', 'title', 'genre', 'subgenre', 'vibe', 'why', 'from', 'watched'];
+var TYPES = ['movie', 'tv'];
+var VIBES = ['cozy', 'laugh', 'cry', 'romance', 'binge', 'edge', 'classic'];
+var MAX_ROWS = 2000;
 
 function getSheet_() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  let sh = ss.getSheetByName(SHEET_NAME);
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET_NAME);
   if (!sh) {
     sh = ss.insertSheet(SHEET_NAME);
     sh.appendRow(HEADERS);
@@ -28,11 +28,11 @@ function getSheet_() {
     return sh;
   }
   // Add any header this version needs that an older sheet doesn't have yet.
-  const lastCol = Math.max(sh.getLastColumn(), 1);
-  const have = sh.getRange(1, 1, 1, lastCol).getValues()[0].map(String);
-  const missing = HEADERS.filter(h => have.indexOf(h) < 0);
+  var lastCol = Math.max(sh.getLastColumn(), 1);
+  var have = sh.getRange(1, 1, 1, lastCol).getValues()[0].map(String);
+  var missing = HEADERS.filter(function (h) { return have.indexOf(h) < 0; });
   if (missing.length) {
-    const start = have.filter(String).length ? lastCol + 1 : 1;
+    var start = have.filter(String).length ? lastCol + 1 : 1;
     sh.getRange(1, start, 1, missing.length).setValues([missing]);
     sh.setFrozenRows(1);
   }
@@ -41,9 +41,9 @@ function getSheet_() {
 
 // header name → 0-based column index
 function columns_(sh) {
-  const row = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
-  const map = {};
-  row.forEach((h, i) => { if (h !== '' && !(h in map)) map[String(h)] = i; });
+  var row = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
+  var map = {};
+  row.forEach(function (h, i) { if (h !== '' && !(String(h) in map)) map[String(h)] = i; });
   return map;
 }
 
@@ -54,22 +54,22 @@ function json_(obj) {
 
 // Trim, cap length, and stop anything that would run as a spreadsheet formula.
 function clean_(value, max) {
-  let s = String(value == null ? '' : value).replace(/\s+/g, ' ').trim().slice(0, max);
+  var s = String(value == null ? '' : value).replace(/\s+/g, ' ').trim().slice(0, max);
   if (/^[=+\-@]/.test(s)) s = "'" + s;
   return s;
 }
 
 function doGet() {
-  const sh = getSheet_();
-  const col = columns_(sh);
-  const values = sh.getDataRange().getValues();
+  var sh = getSheet_();
+  var col = columns_(sh);
+  var values = sh.getDataRange().getValues();
   values.shift(); // headers
-  const get = (r, name) => (name in col ? r[col[name]] : '');
-  const recs = values
-    .filter(r => get(r, 'id') && get(r, 'title'))
-    .map(r => {
-      const added = get(r, 'added');
-      const watched = get(r, 'watched');
+  function get(r, name) { return name in col ? r[col[name]] : ''; }
+  var recs = values
+    .filter(function (r) { return get(r, 'id') && get(r, 'title'); })
+    .map(function (r) {
+      var added = get(r, 'added');
+      var watched = get(r, 'watched');
       return {
         id: String(get(r, 'id')),
         added: added instanceof Date ? added.getTime() : Number(added) || 0,
@@ -87,26 +87,26 @@ function doGet() {
 }
 
 function doPost(e) {
-  let body;
+  var body;
   try {
     body = JSON.parse((e && e.postData && e.postData.contents) || '{}');
   } catch (err) {
     return json_({ ok: false, error: 'bad_request' });
   }
 
-  const lock = LockService.getScriptLock();
+  var lock = LockService.getScriptLock();
   if (!lock.tryLock(10000)) return json_({ ok: false, error: 'busy' });
   try {
-    const sh = getSheet_();
-    const col = columns_(sh);
+    var sh = getSheet_();
+    var col = columns_(sh);
 
     if (body.action === 'add') {
       if (body.website) return json_({ ok: true }); // spam-bot honeypot
-      const title = clean_(body.title, 120);
+      var title = clean_(body.title, 120);
       if (!title) return json_({ ok: false, error: 'missing_title' });
       if (sh.getLastRow() > MAX_ROWS) return json_({ ok: false, error: 'full' });
-      const id = Utilities.getUuid();
-      const fields = {
+      var id = Utilities.getUuid();
+      var fields = {
         id: id,
         added: new Date(),
         type: TYPES.indexOf(body.type) >= 0 ? body.type : 'movie',
@@ -118,17 +118,18 @@ function doPost(e) {
         from: clean_(body.from, 60),
         watched: false
       };
-      const row = new Array(sh.getLastColumn()).fill('');
-      Object.keys(fields).forEach(k => { if (k in col) row[col[k]] = fields[k]; });
+      var row = [];
+      for (var c = 0; c < sh.getLastColumn(); c++) row.push('');
+      Object.keys(fields).forEach(function (k) { if (k in col) row[col[k]] = fields[k]; });
       sh.appendRow(row);
       return json_({ ok: true, id: id });
     }
 
     if (body.action === 'watched') {
-      const last = sh.getLastRow();
+      var last = sh.getLastRow();
       if (last < 2) return json_({ ok: false, error: 'not_found' });
-      const ids = sh.getRange(2, col.id + 1, last - 1, 1).getValues();
-      for (let i = 0; i < ids.length; i++) {
+      var ids = sh.getRange(2, col.id + 1, last - 1, 1).getValues();
+      for (var i = 0; i < ids.length; i++) {
         if (String(ids[i][0]) === String(body.id)) {
           sh.getRange(i + 2, col.watched + 1).setValue(body.watched === true);
           return json_({ ok: true });

@@ -385,10 +385,28 @@ function renderList(){
 /* ---------- data ---------- */
 async function api(body){
   // text/plain keeps this a "simple" request, which Apps Script accepts cross-origin
-  const res = await fetch(SCRIPT_URL, {method:"POST", body: JSON.stringify(body)});
-  const data = await res.json();
+  let res, text;
+  try{
+    res = await fetch(SCRIPT_URL, {method:"POST", body: JSON.stringify(body)});
+    text = await res.text();
+  }catch(e){ throw new Error("network"); }
+  let data;
+  try{ data = JSON.parse(text); }
+  catch(e){
+    // Google sent back a web page instead of data: a sign-in page or a script error
+    const m = text.match(/<div[^>]*>([^<]*(?:Error|error|Exception)[^<]*)<\/div>/);
+    throw new Error(/accounts\.google\.com|ServiceLogin|signin/i.test(text) ? "access" : "script:" + (m ? m[1].trim().slice(0,140) : "HTTP " + res.status));
+  }
   if (!data.ok) throw new Error(data.error || "failed");
   return data;
+}
+function explainError(msg){
+  if (msg === "full") return "The list is full! Ask the organizer to clear out some watched ones.";
+  if (msg === "network") return "Couldn't reach Google. Check your connection and try again.";
+  if (msg === "access") return "Couldn't save: the Google script isn't open to everyone yet. (Organizer: set Who has access to Anyone.)";
+  if (msg === "busy") return "Lots of people adding at once! Please try again in a moment.";
+  if (msg.startsWith("script:")) return "Couldn't save: the Google script hit an error (" + msg.slice(7) + ").";
+  return "Couldn't save that just now (" + msg + "). Please try again in a moment.";
 }
 
 async function load(){
@@ -418,7 +436,7 @@ async function toggleWatched(r, btn){
     r.watched = next; renderList();
   }catch(e){
     btn.disabled = false;
-    setStatus("Couldn't update that one. Please try again.", true);
+    setStatus(explainError(e.message || "failed"), true);
   }
 }
 
@@ -450,8 +468,7 @@ $("recForm").addEventListener("submit", async ev => {
     $("f-title").value = ""; $("f-why").value = ""; $("f-genre").value = ""; updateSubgenres();
     setStatus(`Added “${body.title}”. Thank you! 💜`);
   }catch(e){
-    setStatus(e.message === "full" ? "The list is full! Ask the organizer to clear out some watched ones."
-                                    : "Couldn't save that just now. Please try again in a moment.", true);
+    setStatus(explainError(e.message || "failed"), true);
   }finally{
     $("submitBtn").disabled = false;
   }
